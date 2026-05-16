@@ -1,0 +1,53 @@
+{
+  "name": "hak-stader-plugin",
+  "version": "1.0.0",
+  "description": "Hedera Agent Kit plugin for Stader liquid staking (HBARX) on Hedera",
+  "type": "module",
+  "license": "MIT",
+  "author": "Juanma Gomez",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmgomezl/hak-stader-plugin.git"
+  },
+  "homepage": "https://github.com/jmgomezl/hak-stader-plugin#readme",
+  "bugs": {
+    "url": "https://github.com/jmgomezl/hak-stader-plugin/issues"
+  },
+  "keywords": ["hedera", "stader", "liquid-staking", "hbarx", "agent-kit", "defi", "plugin"],
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "biome check .",
+    "format": "biome format . --write",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hashgraph/hedera-agent-kit": "^4.0.0",
+    "@hiero-ledger/sdk": "^2.82.0",
+    "long": "^5.2.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@types/node": "^20.11.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
