@@ -1,6 +1,6 @@
 {
   "name": "hak-stader-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Hedera Agent Kit plugin for Stader liquid staking (HBARX) on Hedera",
   "type": "module",
   "license": "MIT",
@@ -32,15 +32,20 @@
     "format": "biome format . --write",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "@hashgraph/hedera-agent-kit": "^4.0.0",
+    "@hiero-ledger/sdk": "^2.84.0"
   },
   "dependencies": {
-    "@hashgraph/hedera-agent-kit": "^4.0.0",
-    "@hiero-ledger/sdk": "^2.82.0",
     "long": "^5.2.0",
     "zod": "^3.22.0"
   },
   "devDependencies": {
+    "@hashgraph/hedera-agent-kit": "^4.0.0",
+    "@hiero-ledger/sdk": "^2.84.0",
     "@biomejs/biome": "^1.9.0",
     "@types/node": "^20.11.0",
     "tsup": "^8.0.0",
