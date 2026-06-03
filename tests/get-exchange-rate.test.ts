@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { GetExchangeRateTool } from "../src/tools/get-exchange-rate";
 import type { StaderMirrorClient } from "../src/client";
+import { GetExchangeRateTool } from "../src/tools/get-exchange-rate";
 
 const TREASURY = "0.0.1412503";
 const HBARX_TOKEN = "0.0.834116";
@@ -37,14 +37,22 @@ describe("GetExchangeRateTool.coreAction", () => {
 
   it("returns error when total supply is zero", async () => {
     const mirrorClient = makeMirrorClient("45000000000000000", "0");
-    const result = await tool.coreAction({}, makeContext(mirrorClient) as never, makeClient() as never);
+    const result = await tool.coreAction(
+      {},
+      makeContext(mirrorClient) as never,
+      makeClient() as never,
+    );
     expect(result).toMatchObject({ success: false, error: expect.stringContaining("zero") });
   });
 
   it("returns 1.0 rate when treasury equals supply (in base units)", async () => {
     // 100 HBAR treasury = 10000000000 tinybars, 100 HBARX supply = 10000000000 raw units
     const mirrorClient = makeMirrorClient("10000000000", "10000000000");
-    const result = await tool.coreAction({}, makeContext(mirrorClient) as never, makeClient() as never);
+    const result = await tool.coreAction(
+      {},
+      makeContext(mirrorClient) as never,
+      makeClient() as never,
+    );
     expect(result).toMatchObject({
       success: true,
       exchange_rate_hbar_per_hbarx: "1",
@@ -54,14 +62,22 @@ describe("GetExchangeRateTool.coreAction", () => {
   it("returns correct rate when treasury > supply (rewards accrued)", async () => {
     // 140 HBAR treasury, 100 HBARX supply → rate = 1.4
     const mirrorClient = makeMirrorClient("14000000000", "10000000000");
-    const result = await tool.coreAction({}, makeContext(mirrorClient) as never, makeClient() as never);
+    const result = await tool.coreAction(
+      {},
+      makeContext(mirrorClient) as never,
+      makeClient() as never,
+    );
     expect(result).toMatchObject({ success: true, exchange_rate_hbar_per_hbarx: "1.4" });
   });
 
   it("returns TVL and supply in human-readable format", async () => {
     // 450M HBAR = 45000000000000000 tinybars; 320M HBARX = 32000000000000000 raw
     const mirrorClient = makeMirrorClient("45000000000000000", "32000000000000000");
-    const result = await tool.coreAction({}, makeContext(mirrorClient) as never, makeClient() as never);
+    const result = await tool.coreAction(
+      {},
+      makeContext(mirrorClient) as never,
+      makeClient() as never,
+    );
     expect(result).toMatchObject({
       success: true,
       total_staked_hbar: "450000000",
@@ -71,11 +87,20 @@ describe("GetExchangeRateTool.coreAction", () => {
 
   it("returns error when mirror client throws", async () => {
     const mirrorClient: StaderMirrorClient = {
-      getTreasuryBalanceTinybars: async () => { throw new Error("mirror node down"); },
+      getTreasuryBalanceTinybars: async () => {
+        throw new Error("mirror node down");
+      },
       getHbarxTotalSupplyRaw: async () => "0",
     };
-    const result = await tool.coreAction({}, makeContext(mirrorClient) as never, makeClient() as never);
-    expect(result).toMatchObject({ success: false, error: expect.stringContaining("mirror node down") });
+    const result = await tool.coreAction(
+      {},
+      makeContext(mirrorClient) as never,
+      makeClient() as never,
+    );
+    expect(result).toMatchObject({
+      success: false,
+      error: expect.stringContaining("mirror node down"),
+    });
   });
 });
 

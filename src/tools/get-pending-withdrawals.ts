@@ -1,10 +1,7 @@
 import { BaseTool, type Context } from "@hashgraph/hedera-agent-kit";
 import { AccountId, type Client } from "@hiero-ledger/sdk";
 import { z } from "zod";
-import {
-  type StaderContractClient,
-  createStaderContractClient,
-} from "../client";
+import { type StaderContractClient, createStaderContractClient } from "../client";
 import { resolveStaderConfig } from "../config";
 import type { PendingWithdrawal } from "../types";
 import { formatUnits } from "../utils/units";
@@ -83,9 +80,7 @@ export class GetPendingWithdrawalsTool extends BaseTool<PendingInput, PendingInp
       return {
         success: false,
         error:
-          error instanceof Error
-            ? error.message
-            : "Unknown error fetching pending withdrawals",
+          error instanceof Error ? error.message : "Unknown error fetching pending withdrawals",
       };
     }
   }

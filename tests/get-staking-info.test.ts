@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { GetStakingInfoTool } from "../src/tools/get-staking-info";
 import type { StaderContractClient } from "../src/client";
+import { GetStakingInfoTool } from "../src/tools/get-staking-info";
 
 const STAKING_CONTRACT = "0.0.1027588";
 const UNDELEGATION_CONTRACT = "0.0.1027587";
@@ -81,7 +81,9 @@ describe("GetStakingInfoTool.coreAction", () => {
 
   it("returns error when contract client throws", async () => {
     const errorClient: StaderContractClient = {
-      isStakePaused: async () => { throw new Error("RPC connection failed"); },
+      isStakePaused: async () => {
+        throw new Error("RPC connection failed");
+      },
       isUnstakePaused: async () => false,
       unbondingTime: async () => 86400,
       undelegationsMap: async () => ({ amount: "0", releaseTime: 0 }),
@@ -91,7 +93,10 @@ describe("GetStakingInfoTool.coreAction", () => {
       makeContext(errorClient) as never,
       makeClient() as never,
     );
-    expect(result).toMatchObject({ success: false, error: expect.stringContaining("RPC connection failed") });
+    expect(result).toMatchObject({
+      success: false,
+      error: expect.stringContaining("RPC connection failed"),
+    });
   });
 });
 

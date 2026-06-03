@@ -1,14 +1,14 @@
 import {
   BaseTool,
   type Context,
-  handleTransaction,
   type RawTransactionResponse,
+  handleTransaction,
 } from "@hashgraph/hedera-agent-kit";
 import {
   AccountAllowanceApproveTransaction,
   AccountId,
-  TokenId,
   type Client,
+  TokenId,
   type Transaction,
 } from "@hiero-ledger/sdk";
 import { z } from "zod";
@@ -48,7 +48,11 @@ export class ApproveHbarxTool extends BaseTool<ApproveInput, ApproveInput> {
     "Approve at least the amount you plan to unstake.";
   parameters = approveSchema;
 
-  async normalizeParams(params: ApproveInput, _context: Context, _client: Client): Promise<ApproveInput> {
+  async normalizeParams(
+    params: ApproveInput,
+    _context: Context,
+    _client: Client,
+  ): Promise<ApproveInput> {
     return approveSchema.parse(params);
   }
 
@@ -98,7 +102,8 @@ export class ApproveHbarxTool extends BaseTool<ApproveInput, ApproveInput> {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error building approve transaction",
+        error:
+          error instanceof Error ? error.message : "Unknown error building approve transaction",
       };
     }
   }
@@ -108,7 +113,12 @@ export class ApproveHbarxTool extends BaseTool<ApproveInput, ApproveInput> {
   }
 
   async secondaryAction(payload: ApproveCorePayload, client: Client, context: Context) {
-    const result = await handleTransaction(payload.transaction, client, context, approvePostProcess);
+    const result = await handleTransaction(
+      payload.transaction,
+      client,
+      context,
+      approvePostProcess,
+    );
     return { ...result, ...payload.extras };
   }
 }

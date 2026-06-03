@@ -1,5 +1,5 @@
 import { BaseTool, type Context } from "@hashgraph/hedera-agent-kit";
-import { type Client } from "@hiero-ledger/sdk";
+import type { Client } from "@hiero-ledger/sdk";
 import { z } from "zod";
 import { type StaderContractClient, createStaderContractClient } from "../client";
 import { resolveStaderConfig } from "../config";
@@ -31,8 +31,7 @@ export class GetStakingInfoTool extends BaseTool<StakingInfoInput, StakingInfoIn
     if (!config.stakingContractId || !config.undelegationContractId) {
       return {
         success: false,
-        error:
-          "Missing contract IDs. Set STADER_NETWORK or individual contract ID env vars.",
+        error: "Missing contract IDs. Set STADER_NETWORK or individual contract ID env vars.",
       };
     }
 
@@ -63,8 +62,7 @@ export class GetStakingInfoTool extends BaseTool<StakingInfoInput, StakingInfoIn
     } catch (error) {
       return {
         success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error fetching staking info",
+        error: error instanceof Error ? error.message : "Unknown error fetching staking info",
       };
     }
   }

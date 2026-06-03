@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { GetPendingWithdrawalsTool } from "../src/tools/get-pending-withdrawals";
 import type { StaderContractClient } from "../src/client";
+import { GetPendingWithdrawalsTool } from "../src/tools/get-pending-withdrawals";
 
 const UNDELEGATION_CONTRACT = "0.0.1027587";
 const ACCOUNT_ID = "0.0.12345";
@@ -51,7 +51,10 @@ describe("GetPendingWithdrawalsTool.coreAction", () => {
       ctx as never,
       makeClient() as never,
     );
-    expect(result).toMatchObject({ success: false, error: expect.stringContaining("undelegation contract") });
+    expect(result).toMatchObject({
+      success: false,
+      error: expect.stringContaining("undelegation contract"),
+    });
   });
 
   it("returns empty withdrawals list when no pending withdrawals exist", async () => {
@@ -60,7 +63,12 @@ describe("GetPendingWithdrawalsTool.coreAction", () => {
       makeContext(emptyContractClient) as never,
       makeClient() as never,
     );
-    expect(result).toMatchObject({ success: true, withdrawals: [], total_pending: 0, claimable_count: 0 });
+    expect(result).toMatchObject({
+      success: true,
+      withdrawals: [],
+      total_pending: 0,
+      claimable_count: 0,
+    });
   });
 
   it("returns a claimable withdrawal when release time has passed", async () => {
@@ -89,7 +97,9 @@ describe("GetPendingWithdrawalsTool.coreAction", () => {
     expect(result).toMatchObject({ success: true, total_pending: 1, claimable_count: 0 });
     if ("withdrawals" in result && Array.isArray(result.withdrawals)) {
       expect(result.withdrawals[0]).toMatchObject({ claimable: false });
-      expect((result.withdrawals[0] as { seconds_remaining: number }).seconds_remaining).toBeGreaterThan(0);
+      expect(
+        (result.withdrawals[0] as { seconds_remaining: number }).seconds_remaining,
+      ).toBeGreaterThan(0);
     }
   });
 });

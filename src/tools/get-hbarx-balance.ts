@@ -1,5 +1,5 @@
 import { BaseTool, type Context } from "@hashgraph/hedera-agent-kit";
-import { type Client } from "@hiero-ledger/sdk";
+import type { Client } from "@hiero-ledger/sdk";
 import { z } from "zod";
 import { type StaderBalanceQuery, createStaderBalanceQuery } from "../client";
 import { resolveStaderConfig } from "../config";

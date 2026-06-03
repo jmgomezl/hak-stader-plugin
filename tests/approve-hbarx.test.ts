@@ -25,12 +25,11 @@ describe("ApproveHbarxTool.coreAction", () => {
   const tool = new ApproveHbarxTool();
 
   it("returns error when client has no operator account", async () => {
-    const result = await tool.coreAction(
-      baseArgs,
-      makeContext() as never,
-      makeClient() as never,
-    );
-    expect(result).toMatchObject({ success: false, error: expect.stringContaining("operator account") });
+    const result = await tool.coreAction(baseArgs, makeContext() as never, makeClient() as never);
+    expect(result).toMatchObject({
+      success: false,
+      error: expect.stringContaining("operator account"),
+    });
   });
 
   it("returns error when staking contract ID is missing", async () => {
@@ -39,7 +38,10 @@ describe("ApproveHbarxTool.coreAction", () => {
       makeContext({ stakingContractId: undefined }) as never,
       makeClient(OPERATOR) as never,
     );
-    expect(result).toMatchObject({ success: false, error: expect.stringContaining("staking contract") });
+    expect(result).toMatchObject({
+      success: false,
+      error: expect.stringContaining("staking contract"),
+    });
   });
 
   it("returns error when HBARX token ID is missing", async () => {
@@ -61,7 +63,11 @@ describe("ApproveHbarxTool.coreAction", () => {
   });
 
   it("returns a core payload with a transaction on happy path", async () => {
-    const result = await tool.coreAction(baseArgs, makeContext() as never, makeClient(OPERATOR) as never);
+    const result = await tool.coreAction(
+      baseArgs,
+      makeContext() as never,
+      makeClient(OPERATOR) as never,
+    );
     expect(result).toHaveProperty("transaction");
     expect(result).toHaveProperty("extras");
     if ("extras" in result) {
@@ -78,10 +84,14 @@ describe("ApproveHbarxTool.shouldSecondaryAction", () => {
   const tool = new ApproveHbarxTool();
 
   it("returns true for a transaction payload", async () => {
-    expect(await tool.shouldSecondaryAction({ transaction: {}, extras: {} }, {} as never)).toBe(true);
+    expect(await tool.shouldSecondaryAction({ transaction: {}, extras: {} }, {} as never)).toBe(
+      true,
+    );
   });
 
   it("returns false for an error result", async () => {
-    expect(await tool.shouldSecondaryAction({ success: false, error: "oops" }, {} as never)).toBe(false);
+    expect(await tool.shouldSecondaryAction({ success: false, error: "oops" }, {} as never)).toBe(
+      false,
+    );
   });
 });
