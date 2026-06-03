@@ -28,52 +28,69 @@ export interface StaderBalanceQuery {
   getHbarxBalance(accountId: string): Promise<string | null>;
 }
 
+const requireContractId = (value: string | undefined, name: keyof StaderConfig): string => {
+  if (!value) {
+    throw new Error(
+      `Stader ${name} is not configured. Set it via plugin config, the matching env var, or use a supported network.`,
+    );
+  }
+  return value;
+};
+
 export const createStaderContractClient = (
   config: StaderConfig,
   client: Client,
-): StaderContractClient => ({
-  isStakePaused: async () => {
-    const result = await new ContractCallQuery()
-      .setContractId(config.stakingContractId!)
-      .setGas(100_000)
-      .setFunction("isStakePaused")
-      .execute(client);
-    return result.getBool(0);
-  },
+): StaderContractClient => {
+  const stakingContractId = requireContractId(config.stakingContractId, "stakingContractId");
+  const undelegationContractId = requireContractId(
+    config.undelegationContractId,
+    "undelegationContractId",
+  );
 
-  isUnstakePaused: async () => {
-    const result = await new ContractCallQuery()
-      .setContractId(config.stakingContractId!)
-      .setGas(100_000)
-      .setFunction("isUnstakePaused")
-      .execute(client);
-    return result.getBool(0);
-  },
+  return {
+    isStakePaused: async () => {
+      const result = await new ContractCallQuery()
+        .setContractId(stakingContractId)
+        .setGas(100_000)
+        .setFunction("isStakePaused")
+        .execute(client);
+      return result.getBool(0);
+    },
 
-  unbondingTime: async () => {
-    const result = await new ContractCallQuery()
-      .setContractId(config.undelegationContractId!)
-      .setGas(100_000)
-      .setFunction("unbondingTime")
-      .execute(client);
-    return result.getUint256(0).toNumber();
-  },
+    isUnstakePaused: async () => {
+      const result = await new ContractCallQuery()
+        .setContractId(stakingContractId)
+        .setGas(100_000)
+        .setFunction("isUnstakePaused")
+        .execute(client);
+      return result.getBool(0);
+    },
 
-  undelegationsMap: async (evmAddress: string, index: number) => {
-    const params = new ContractFunctionParameters()
-      .addAddress(evmAddress)
-      .addUint256(uint256Arg(index));
-    const result = await new ContractCallQuery()
-      .setContractId(config.undelegationContractId!)
-      .setGas(100_000)
-      .setFunction("undelegationsMap", params)
-      .execute(client);
-    return {
-      amount: result.getUint256(0).toString(),
-      releaseTime: result.getUint256(1).toNumber(),
-    };
-  },
-});
+    unbondingTime: async () => {
+      const result = await new ContractCallQuery()
+        .setContractId(undelegationContractId)
+        .setGas(100_000)
+        .setFunction("unbondingTime")
+        .execute(client);
+      return result.getUint256(0).toNumber();
+    },
+
+    undelegationsMap: async (evmAddress: string, index: number) => {
+      const params = new ContractFunctionParameters()
+        .addAddress(evmAddress)
+        .addUint256(uint256Arg(index));
+      const result = await new ContractCallQuery()
+        .setContractId(undelegationContractId)
+        .setGas(100_000)
+        .setFunction("undelegationsMap", params)
+        .execute(client);
+      return {
+        amount: result.getUint256(0).toString(),
+        releaseTime: result.getUint256(1).toNumber(),
+      };
+    },
+  };
+};
 
 export const createStaderMirrorClient = (config: StaderConfig): StaderMirrorClient => ({
   getTreasuryBalanceTinybars: async () => {

@@ -1,23 +1,21 @@
 import {
   BaseTool,
   type Context,
-  handleTransaction,
   type RawTransactionResponse,
+  handleTransaction,
 } from "@hashgraph/hedera-agent-kit";
 import {
+  type Client,
   ContractExecuteTransaction,
   ContractId,
   Hbar,
-  type Client,
   type Transaction,
 } from "@hiero-ledger/sdk";
 import { z } from "zod";
 import { resolveStaderConfig } from "../config";
 
 const stakeSchema = z.object({
-  amount_hbar: z
-    .string()
-    .describe("Amount of HBAR to stake (decimal format, e.g. '100' or '1.5')"),
+  amount_hbar: z.string().describe("Amount of HBAR to stake (decimal format, e.g. '100' or '1.5')"),
 });
 
 type StakeInput = z.infer<typeof stakeSchema>;
@@ -42,7 +40,11 @@ export class StakeHbarTool extends BaseTool<StakeInput, StakeInput> {
     "Must run stader_approve_hbarx before unstaking later.";
   parameters = stakeSchema;
 
-  async normalizeParams(params: StakeInput, _context: Context, _client: Client): Promise<StakeInput> {
+  async normalizeParams(
+    params: StakeInput,
+    _context: Context,
+    _client: Client,
+  ): Promise<StakeInput> {
     return stakeSchema.parse(params);
   }
 

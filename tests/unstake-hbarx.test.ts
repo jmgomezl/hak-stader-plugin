@@ -16,7 +16,10 @@ describe("UnstakeHbarxTool.coreAction", () => {
 
   it("returns error when staking contract ID is missing", async () => {
     const result = await tool.coreAction(baseArgs, makeContext() as never, makeClient() as never);
-    expect(result).toMatchObject({ success: false, error: expect.stringContaining("staking contract") });
+    expect(result).toMatchObject({
+      success: false,
+      error: expect.stringContaining("staking contract"),
+    });
   });
 
   it("returns error for invalid amount format", async () => {
@@ -71,10 +74,14 @@ describe("UnstakeHbarxTool.shouldSecondaryAction", () => {
   const tool = new UnstakeHbarxTool();
 
   it("returns true for a transaction payload", async () => {
-    expect(await tool.shouldSecondaryAction({ transaction: {}, extras: {} }, {} as never)).toBe(true);
+    expect(await tool.shouldSecondaryAction({ transaction: {}, extras: {} }, {} as never)).toBe(
+      true,
+    );
   });
 
   it("returns false for an error result", async () => {
-    expect(await tool.shouldSecondaryAction({ success: false, error: "oops" }, {} as never)).toBe(false);
+    expect(await tool.shouldSecondaryAction({ success: false, error: "oops" }, {} as never)).toBe(
+      false,
+    );
   });
 });

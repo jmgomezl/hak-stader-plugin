@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { GetHbarxBalanceTool } from "../src/tools/get-hbarx-balance";
 import type { StaderBalanceQuery } from "../src/client";
+import { GetHbarxBalanceTool } from "../src/tools/get-hbarx-balance";
 
 const HBARX_TOKEN = "0.0.834116";
 const ACCOUNT_ID = "0.0.12345";

@@ -1,14 +1,14 @@
 import {
   BaseTool,
   type Context,
-  handleTransaction,
   type RawTransactionResponse,
+  handleTransaction,
 } from "@hashgraph/hedera-agent-kit";
 import {
+  type Client,
   ContractExecuteTransaction,
   ContractFunctionParameters,
   ContractId,
-  type Client,
   type Transaction,
 } from "@hiero-ledger/sdk";
 import { z } from "zod";
@@ -38,8 +38,7 @@ const isClaimCorePayload = (value: unknown): value is ClaimCorePayload =>
   typeof value === "object" && value !== null && "transaction" in value;
 
 const claimPostProcess = (response: RawTransactionResponse) =>
-  `Stader withdrawal claimed. HBAR should now be in your account. ` +
-  `Status: ${response.status}. Transaction ID: ${response.transactionId}`;
+  `Stader withdrawal claimed. HBAR should now be in your account. Status: ${response.status}. Transaction ID: ${response.transactionId}`;
 
 export class ClaimWithdrawalTool extends BaseTool<ClaimInput, ClaimInput> {
   method = "stader_claim_withdrawal";
@@ -50,7 +49,11 @@ export class ClaimWithdrawalTool extends BaseTool<ClaimInput, ClaimInput> {
     "Use stader_get_pending_withdrawals to find the withdrawal index and check if it is claimable.";
   parameters = claimSchema;
 
-  async normalizeParams(params: ClaimInput, _context: Context, _client: Client): Promise<ClaimInput> {
+  async normalizeParams(
+    params: ClaimInput,
+    _context: Context,
+    _client: Client,
+  ): Promise<ClaimInput> {
     return claimSchema.parse(params);
   }
 
@@ -66,9 +69,7 @@ export class ClaimWithdrawalTool extends BaseTool<ClaimInput, ClaimInput> {
     }
 
     try {
-      const params = new ContractFunctionParameters().addUint256(
-        uint256Arg(args.withdrawal_index),
-      );
+      const params = new ContractFunctionParameters().addUint256(uint256Arg(args.withdrawal_index));
 
       const transaction = new ContractExecuteTransaction()
         .setContractId(ContractId.fromString(config.undelegationContractId))

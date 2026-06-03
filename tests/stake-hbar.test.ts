@@ -16,7 +16,10 @@ describe("StakeHbarTool.coreAction", () => {
 
   it("returns error when staking contract ID is missing", async () => {
     const result = await tool.coreAction(baseArgs, makeContext() as never, makeClient() as never);
-    expect(result).toMatchObject({ success: false, error: expect.stringContaining("staking contract") });
+    expect(result).toMatchObject({
+      success: false,
+      error: expect.stringContaining("staking contract"),
+    });
   });
 
   it("returns error for invalid amount", async () => {
@@ -25,7 +28,10 @@ describe("StakeHbarTool.coreAction", () => {
       makeContext(STAKING_CONTRACT) as never,
       makeClient() as never,
     );
-    expect(result).toMatchObject({ success: false, error: expect.stringContaining("Invalid amount") });
+    expect(result).toMatchObject({
+      success: false,
+      error: expect.stringContaining("Invalid amount"),
+    });
   });
 
   it("returns error for zero amount", async () => {
@@ -34,7 +40,10 @@ describe("StakeHbarTool.coreAction", () => {
       makeContext(STAKING_CONTRACT) as never,
       makeClient() as never,
     );
-    expect(result).toMatchObject({ success: false, error: expect.stringContaining("Invalid amount") });
+    expect(result).toMatchObject({
+      success: false,
+      error: expect.stringContaining("Invalid amount"),
+    });
   });
 
   it("returns a core payload with a transaction on happy path", async () => {
@@ -67,11 +76,15 @@ describe("StakeHbarTool.shouldSecondaryAction", () => {
   const tool = new StakeHbarTool();
 
   it("returns true when coreAction produced a transaction payload", async () => {
-    expect(await tool.shouldSecondaryAction({ transaction: {}, extras: {} }, {} as never)).toBe(true);
+    expect(await tool.shouldSecondaryAction({ transaction: {}, extras: {} }, {} as never)).toBe(
+      true,
+    );
   });
 
   it("returns false for an error result", async () => {
-    expect(await tool.shouldSecondaryAction({ success: false, error: "oops" }, {} as never)).toBe(false);
+    expect(await tool.shouldSecondaryAction({ success: false, error: "oops" }, {} as never)).toBe(
+      false,
+    );
   });
 
   it("returns false for null", async () => {

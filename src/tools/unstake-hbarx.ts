@@ -1,14 +1,14 @@
 import {
   BaseTool,
   type Context,
-  handleTransaction,
   type RawTransactionResponse,
+  handleTransaction,
 } from "@hashgraph/hedera-agent-kit";
 import {
+  type Client,
   ContractExecuteTransaction,
   ContractFunctionParameters,
   ContractId,
-  type Client,
   type Transaction,
 } from "@hiero-ledger/sdk";
 import { z } from "zod";
@@ -38,8 +38,7 @@ const isUnstakeCorePayload = (value: unknown): value is UnstakeCorePayload =>
   typeof value === "object" && value !== null && "transaction" in value;
 
 const unstakePostProcess = (response: RawTransactionResponse) =>
-  `Stader unstake submitted. HBAR will be claimable after the unbonding period (~1 day). ` +
-  `Status: ${response.status}. Transaction ID: ${response.transactionId}`;
+  `Stader unstake submitted. HBAR will be claimable after the unbonding period (~1 day). Status: ${response.status}. Transaction ID: ${response.transactionId}`;
 
 export class UnstakeHbarxTool extends BaseTool<UnstakeInput, UnstakeInput> {
   method = "stader_unstake_hbar";
@@ -50,7 +49,11 @@ export class UnstakeHbarxTool extends BaseTool<UnstakeInput, UnstakeInput> {
     "Requires a prior stader_approve_hbarx call for at least the same amount.";
   parameters = unstakeSchema;
 
-  async normalizeParams(params: UnstakeInput, _context: Context, _client: Client): Promise<UnstakeInput> {
+  async normalizeParams(
+    params: UnstakeInput,
+    _context: Context,
+    _client: Client,
+  ): Promise<UnstakeInput> {
     return unstakeSchema.parse(params);
   }
 
@@ -98,7 +101,12 @@ export class UnstakeHbarxTool extends BaseTool<UnstakeInput, UnstakeInput> {
   }
 
   async secondaryAction(payload: UnstakeCorePayload, client: Client, context: Context) {
-    const result = await handleTransaction(payload.transaction, client, context, unstakePostProcess);
+    const result = await handleTransaction(
+      payload.transaction,
+      client,
+      context,
+      unstakePostProcess,
+    );
     return { ...result, ...payload.extras };
   }
 }

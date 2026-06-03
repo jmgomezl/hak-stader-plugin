@@ -18,7 +18,10 @@ describe("ClaimWithdrawalTool.coreAction", () => {
       makeContext() as never,
       makeClient() as never,
     );
-    expect(result).toMatchObject({ success: false, error: expect.stringContaining("undelegation contract") });
+    expect(result).toMatchObject({
+      success: false,
+      error: expect.stringContaining("undelegation contract"),
+    });
   });
 
   it("returns a core payload for index 0 on happy path", async () => {
@@ -54,10 +57,14 @@ describe("ClaimWithdrawalTool.shouldSecondaryAction", () => {
   const tool = new ClaimWithdrawalTool();
 
   it("returns true for a transaction payload", async () => {
-    expect(await tool.shouldSecondaryAction({ transaction: {}, extras: {} }, {} as never)).toBe(true);
+    expect(await tool.shouldSecondaryAction({ transaction: {}, extras: {} }, {} as never)).toBe(
+      true,
+    );
   });
 
   it("returns false for an error result", async () => {
-    expect(await tool.shouldSecondaryAction({ success: false, error: "oops" }, {} as never)).toBe(false);
+    expect(await tool.shouldSecondaryAction({ success: false, error: "oops" }, {} as never)).toBe(
+      false,
+    );
   });
 });

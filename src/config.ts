@@ -31,8 +31,10 @@ const readContextConfig = (context: unknown): Partial<StaderConfig> => {
 
 export const resolveStaderConfig = (context?: unknown): StaderConfig => {
   const ctxConfig = readContextConfig(context);
-  const network = ctxConfig.network ?? readNetwork(process.env["STADER_NETWORK"]);
-  const networkDefaults: Partial<StaderNetworkDefaults> = network ? (NETWORK_DEFAULTS[network] ?? {}) : {};
+  const network = ctxConfig.network ?? readNetwork(process.env.STADER_NETWORK);
+  const networkDefaults: Partial<StaderNetworkDefaults> = network
+    ? (NETWORK_DEFAULTS[network] ?? {})
+    : {};
 
   return {
     ...DEFAULT_CONFIG,
@@ -40,27 +42,25 @@ export const resolveStaderConfig = (context?: unknown): StaderConfig => {
     network,
     stakingContractId:
       ctxConfig.stakingContractId ??
-      process.env["STADER_STAKING_CONTRACT_ID"] ??
+      process.env.STADER_STAKING_CONTRACT_ID ??
       networkDefaults.stakingContractId,
     undelegationContractId:
       ctxConfig.undelegationContractId ??
-      process.env["STADER_UNDELEGATION_CONTRACT_ID"] ??
+      process.env.STADER_UNDELEGATION_CONTRACT_ID ??
       networkDefaults.undelegationContractId,
     hbarxTokenId:
-      ctxConfig.hbarxTokenId ??
-      process.env["STADER_HBARX_TOKEN_ID"] ??
-      networkDefaults.hbarxTokenId,
+      ctxConfig.hbarxTokenId ?? process.env.STADER_HBARX_TOKEN_ID ?? networkDefaults.hbarxTokenId,
     treasuryAccountId:
       ctxConfig.treasuryAccountId ??
-      process.env["STADER_TREASURY_ACCOUNT_ID"] ??
+      process.env.STADER_TREASURY_ACCOUNT_ID ??
       networkDefaults.treasuryAccountId,
     mirrorNodeBaseUrl:
       ctxConfig.mirrorNodeBaseUrl ??
-      process.env["STADER_MIRROR_NODE_BASE_URL"] ??
+      process.env.STADER_MIRROR_NODE_BASE_URL ??
       networkDefaults.mirrorNodeBaseUrl,
-    gasLimit: ctxConfig.gasLimit ?? toNumber(process.env["STADER_GAS_LIMIT"], DEFAULT_CONFIG.gasLimit),
+    gasLimit: ctxConfig.gasLimit ?? toNumber(process.env.STADER_GAS_LIMIT, DEFAULT_CONFIG.gasLimit),
     maxWithdrawalPollingIndex:
       ctxConfig.maxWithdrawalPollingIndex ??
-      toNumber(process.env["STADER_MAX_WITHDRAWAL_INDEX"], DEFAULT_CONFIG.maxWithdrawalPollingIndex),
+      toNumber(process.env.STADER_MAX_WITHDRAWAL_INDEX, DEFAULT_CONFIG.maxWithdrawalPollingIndex),
   };
 };

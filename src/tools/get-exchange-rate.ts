@@ -1,5 +1,5 @@
 import { BaseTool, type Context } from "@hashgraph/hedera-agent-kit";
-import { type Client } from "@hiero-ledger/sdk";
+import type { Client } from "@hiero-ledger/sdk";
 import { z } from "zod";
 import { type StaderMirrorClient, createStaderMirrorClient } from "../client";
 import { resolveStaderConfig } from "../config";
@@ -77,8 +77,7 @@ export class GetExchangeRateTool extends BaseTool<ExchangeRateInput, ExchangeRat
     } catch (error) {
       return {
         success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error fetching exchange rate",
+        error: error instanceof Error ? error.message : "Unknown error fetching exchange rate",
       };
     }
   }
